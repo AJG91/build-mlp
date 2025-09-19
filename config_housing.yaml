@@ -1,0 +1,9 @@
+
+path: '../outputs/'
+seed: 42
+
+normalize: 'StandardScaler'
+split_size: 0.2
+batch_size: 128
+learning_rate: 0.0001
+epochs: 20
