@@ -10,7 +10,7 @@ from load_dataset import LoadDataset
 def get_dataloaders(
     dataset: str,
     normalize: str = None,
-    split_size: float = 0.1,
+    data_split: float = 0.1,
     batch_size: int = 64,
     seed: int = 42,
     **kwargs
@@ -25,7 +25,7 @@ def get_dataloaders(
     normalize : str, optional (default=None)
         Specifies the way to normalize the dataset.
         If None, then the data is not normalized.
-    split_size : float, optional (default=0.1)
+    data_split : float, optional (default=0.1)
         The fraction of data that will be split off for the validation/test set.
     batch_size : int, optional (default=64)
         Number of samples per batch.
@@ -43,7 +43,7 @@ def get_dataloaders(
     test_loader : DataLoader
         DataLoader for the test set, without shuffling.
     """
-    data = PreprocessDataset(dataset, normalize, split_size, rand_seed=seed, **kwargs)
+    data = PreprocessDataset(dataset, normalize, data_split, rand_seed=seed, **kwargs)
     return (
         DataLoader(TensorDataset(data.X_train, data.y_train), batch_size=batch_size, shuffle=True),
         DataLoader(TensorDataset(data.X_val, data.y_val), batch_size=batch_size),
