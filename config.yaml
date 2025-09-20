@@ -1,0 +1,9 @@
+
+dataset: "housing"
+path: "../outputs/"
+seed: 42
+dpi: 400
+
+normalize: "StandardScaler"
+data_split: 0.2
+batch_size: 128
