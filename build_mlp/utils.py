@@ -1,4 +1,3 @@
-
 import torch as tc
 import numpy as np
 import random
@@ -32,7 +31,7 @@ def load_json(path: str = "params.json") -> Dict[str, Any]:
 
     Parameters
     ----------
-    path : str, optional (default='params.json')
+    path : str, optional (default="params.json")
         Path to the json parameter file.
 
     Returns

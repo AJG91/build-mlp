@@ -1,11 +1,9 @@
-
 import torch as tc
 from torch.utils.data import Dataset, DataLoader, TensorDataset
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from typing import Tuple
 from load_dataset import LoadDataset
-
 
 def get_dataloaders(
     dataset: str,
@@ -45,9 +43,18 @@ def get_dataloaders(
     """
     data = PreprocessDataset(dataset, normalize, data_split, rand_seed=seed, **kwargs)
     return (
-        DataLoader(TensorDataset(data.X_train, data.y_train), batch_size=batch_size, shuffle=True),
-        DataLoader(TensorDataset(data.X_val, data.y_val), batch_size=batch_size),
-        DataLoader(TensorDataset(data.X_test, data.y_test), batch_size=batch_size)
+        DataLoader(
+            TensorDataset(data.X_train, data.y_train), 
+            batch_size=batch_size, shuffle=True
+            ),
+        DataLoader(
+            TensorDataset(data.X_val, data.y_val), 
+            batch_size=batch_size
+            ),
+        DataLoader(
+            TensorDataset(data.X_test, data.y_test), 
+            batch_size=batch_size
+            )
     )
 
 class PreprocessDataset(Dataset):
@@ -73,7 +80,7 @@ class PreprocessDataset(Dataset):
     ----------
     dataset : str
         Name of the dataset to load.
-        Options: 'MNIST', 'MEDMNIST'
+        Options: "MNIST", "MEDMNIST"
     normalize : str, optional (default=None)
         Specifies the way to normalize the dataset.
         If None, then the data is not normalized.
@@ -101,12 +108,12 @@ class PreprocessDataset(Dataset):
         if normalize is not None:
             normalize = normalize.upper()
             normalization = {
-                'STANDARDSCALER': lambda: self._standard_scaler(X_train, X_val, X_test),
-                'MINMAXSCALER': lambda: self._min_max_scaler(X_train, X_val, X_test),
+                "STANDARDSCALER": lambda: self._standard_scaler(X_train, X_val, X_test),
+                "MINMAXSCALER": lambda: self._min_max_scaler(X_train, X_val, X_test),
             }
             if normalize not in normalization:
-                raise ValueError(f'Normalization not supported -> {normalize}. '
-                                 f'Available: {list(normalization.keys())}')
+                raise ValueError(f"Normalization not supported -> {normalize}. "
+                                 f"Available: {list(normalization.keys())}")
             X_train, X_val, X_test = normalization[normalize]()
 
         self.X_train, self.y_train = X_train, y_train

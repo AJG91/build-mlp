@@ -1,4 +1,3 @@
-
 import torch as tc
 from sklearn.metrics import mean_squared_error, r2_score
 from typing import Callable
@@ -25,7 +24,7 @@ def train_model(
         Function that will be used to calculate the discrepancy between predictions and targets.
     device : torch.device or str
         Device on which training is performed.
-        Options: 'cpu', 'cuda'
+        Options: "cpu", "cuda"
         
     Returns
     -------

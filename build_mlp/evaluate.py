@@ -1,7 +1,5 @@
-
 import torch as tc
 from sklearn.metrics import mean_squared_error, r2_score
-
 
 def evaluate_model(    
     model: tc.nn.Module,
@@ -20,7 +18,7 @@ def evaluate_model(
         DataLoader for the training set.
     device : torch.device or str
         Device on which training is performed.
-        Options: 'cpu', 'cuda'
+        Options: "cpu", "cuda"
         
     Returns
     -------
