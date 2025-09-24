@@ -1,5 +1,6 @@
+import os
 import torch as tc
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import r2_score
 from typing import Callable
 
 def train_model(
@@ -31,6 +32,7 @@ def train_model(
     float
         Training metrics.
     """
+    train_loss = 0
     all_preds, all_targets = [], []
     
     model.train()
@@ -42,16 +44,16 @@ def train_model(
         loss.backward()
         optimizer.step()
 
+        train_loss += loss.item() * X.size(0)
+
         all_preds.append(output)
         all_targets.append(y)
 
     all_preds = tc.cat(all_preds).detach().cpu().numpy().ravel()
     all_targets = tc.cat(all_targets).detach().cpu().numpy().ravel()
 
-    mse = mean_squared_error(all_targets, all_preds)
+    train_loss /= len(loader.dataset)
     r2 = r2_score(all_targets, all_preds)
     
-    return mse, r2
-
-
+    return tc.Tensor([train_loss, r2])
     
