@@ -128,6 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# PyTorch save states
+*.pth
+
 .DS_Store
 .
 ..
