@@ -1,9 +1,11 @@
 import torch as tc
-from sklearn.metrics import mean_squared_error, r2_score
+from typing import Callable
+from sklearn.metrics import r2_score
 
 def evaluate_model(    
     model: tc.nn.Module,
     loader: tc.utils.data.DataLoader,
+    loss_fn: Callable[[tc.Tensor, tc.Tensor], tc.Tensor],
     device: tc.device,
 ) -> float:
     """
@@ -16,6 +18,8 @@ def evaluate_model(
         The model that will be trained.
     loader : torch.utils.data.DataLoader
         DataLoader for the training set.
+    loss_fn : Callable
+        Function that will be used to calculate the discrepancy between predictions and targets.
     device : torch.device or str
         Device on which training is performed.
         Options: "cpu", "cuda"
@@ -25,6 +29,7 @@ def evaluate_model(
     float
         Validation/test metrics.
     """
+    eval_loss = 0
     all_preds, all_targets = [], []
     
     model.eval()
@@ -32,6 +37,9 @@ def evaluate_model(
         for X, y in loader:
             X, y = X.to(device), y.to(device)
             output = model(X)
+            loss = loss_fn(output, y)
+
+            eval_loss += loss.item() * X.size(0)
             
             all_preds.append(output)
             all_targets.append(y)
@@ -39,10 +47,10 @@ def evaluate_model(
     all_preds = tc.cat(all_preds).detach().cpu().numpy().ravel()
     all_targets = tc.cat(all_targets).detach().cpu().numpy().ravel()
 
-    mse = mean_squared_error(all_targets, all_preds)
+    eval_loss /= len(loader.dataset)
     r2 = r2_score(all_targets, all_preds)
     
-    return mse, r2
+    return tc.Tensor([eval_loss, r2])
 
 
     
