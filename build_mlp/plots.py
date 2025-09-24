@@ -64,7 +64,7 @@ def plot_pca(
     ax.set_xlabel("PC 1", fontsize=16)
     ax.set_ylabel("PC 2", fontsize=16)
     plt.tight_layout()
-    plt.show();
+    plt.show()
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"pca_{data}_{iter_size}_batches.png", bbox_inches="tight", dpi=dpi)
@@ -127,7 +127,7 @@ def plot_t_sne(
     ax.set_xlabel("t-SNE 1", fontsize=16)
     ax.set_ylabel("t-SNE 2", fontsize=16)
     plt.tight_layout()
-    plt.show();
+    plt.show()
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"t_sne_{data}_{iter_size}_batches.png", bbox_inches="tight", dpi=dpi)
@@ -169,7 +169,7 @@ def plot_feature_distributions(
     for ax in axes.ravel():
         ax.set_title(ax.get_title(), fontsize=14)
         
-    plt.show();
+    plt.show()
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"feature_distribution_{data}.png", bbox_inches="tight", dpi=dpi)
@@ -209,7 +209,7 @@ def plot_price_by_location(
     cbar.ax.tick_params(labelsize=14)
     plt.xlabel("Longitude", fontsize=14)
     plt.ylabel("Latitude", fontsize=14)
-    plt.show();
+    plt.show()
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"price_by_location_{data}.png", bbox_inches="tight", dpi=dpi)
@@ -250,7 +250,7 @@ def plot_population_and_prices(
     cbar.ax.tick_params(labelsize=14)
     plt.xlabel("Longitude", fontsize=14)
     plt.ylabel("Latitude", fontsize=14)
-    plt.show();
+    plt.show()
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"price_and_population_{data}.png", bbox_inches="tight", dpi=dpi)
@@ -293,7 +293,7 @@ def plot_correlation_map(
     ax.set_yticks(range(len(corr.columns)))
     ax.set_xticklabels(corr.columns, rotation=90)
     ax.set_yticklabels(corr.columns)
-    plt.show();
+    plt.show()
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"correlation_map_{data}.png", bbox_inches="tight", dpi=dpi)
@@ -312,13 +312,13 @@ def plot_metrics_vs_epochs(
     epochs_mesh = tc.arange(0, epochs)
     
     fig, ax = plt.subplots(figsize=figsize)
-    ax.plot(epochs_mesh, train_metric, label="train set")
+    ax.plot(epochs_mesh, train_metric, label="training set")
     ax.plot(epochs_mesh, val_metric, label="validation set")
 
     ax.set_xlabel("epochs", fontsize=14)
     ax.set_ylabel(f"{metric}", fontsize=14)
     ax.legend(fontsize=14)
-    plt.show();
+    plt.show()
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"{metric}_vs_epochs.png", bbox_inches="tight", dpi=dpi)
