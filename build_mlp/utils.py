@@ -27,32 +27,6 @@ def set_seed(seed: int = 42) -> None:
     if tc.cuda.is_available():
         tc.cuda.manual_seed_all(seed)
 
-# def load_json(path: str = "params.json") -> Dict[str, Any]:
-#     """
-#     Reads a json file from the given path and returns its contents as a Python dictionary. 
-
-#     Parameters
-#     ----------
-#     path : str, optional (default="params.json")
-#         Path to the json parameter file.
-
-#     Returns
-#     -------
-#     dict
-#         A dictionary containing the configuration parameters parsed
-#         from the json file.
-
-#     Raises
-#     ------
-#     json.JSONDecodeError
-#         If the specified file does not exist.
-#     """
-#     try:
-#         with open(path, "r") as f:
-#             return SimpleNamespace(**json.load(f))
-#     except json.JSONDecodeError as e:
-#         print("Invalid JSON:", e)
-
 def load_config(path: str = "config.yaml") -> Dict[str, Any]:
     """
     Reads a YAML file from the given path and returns its contents as a Python dictionary. 
@@ -101,6 +75,7 @@ class OutputLogger:
 class JsonManager(dict):
     """
     Loads, saves, and updates JSON file.
+    Inherits from the built-in dict class.
 
     Everything is done relative to `folder`, which is the global 
     folder where directories will be created when using `update` method.
