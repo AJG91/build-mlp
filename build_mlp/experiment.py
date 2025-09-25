@@ -5,7 +5,7 @@ from model import MLP
 from train import train_model
 from evaluate import evaluate_model
 from save_checkpoints import CheckpointManager
-from output_logger import OutputLogger
+from utils import OutputLogger
 from plots import plot_metrics_vs_epochs
 
 def model_pipeline(train, val, test, prms, cfg, out_path, device, plot=False):
