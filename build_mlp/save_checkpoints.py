@@ -2,7 +2,7 @@ import os
 import torch as tc
 from torch import nn, optim
 from typing import Optional, Union, Tuple
-from output_logger import OutputLogger
+from utils import OutputLogger
 
 class CheckpointManager:
     """
