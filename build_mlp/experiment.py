@@ -6,7 +6,7 @@ from model import MLP
 from train import train_model
 from evaluate import evaluate_model
 from build_dataset import get_dataloaders
-from save_checkpoints import CheckpointManager
+from create_checkpoints import CheckpointManager
 from utils import OutputLogger
 from plots import plot_metrics_vs_epochs
 
