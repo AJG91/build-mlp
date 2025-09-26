@@ -1,15 +1,21 @@
+import os
 import torch as tc
 import torch.nn as nn
 import torch.optim as optim
 from model import MLP
 from train import train_model
 from evaluate import evaluate_model
+from build_dataset import get_dataloaders
 from save_checkpoints import CheckpointManager
 from utils import OutputLogger
 from plots import plot_metrics_vs_epochs
 
-def model_pipeline(train, val, test, prms, cfg, out_path, device, plot=False):
-    logger = OutputLogger(out_path + "/output.log")
+def model_pipeline(prms, cfg, out_path, device, show=False, plot=False):
+    logger = OutputLogger(out_path + "/output.log", show=show)
+
+    train, val, test = get_dataloaders(cfg.dataset, cfg.normalize, 
+                                       cfg.data_split, cfg.batch_size, 
+                                       cfg.seed)
 
     X, _ = next(iter(train))
     model, optimizer, loss_fn = initialize_model(X.shape[1], prms, device)
@@ -19,10 +25,13 @@ def model_pipeline(train, val, test, prms, cfg, out_path, device, plot=False):
     test_metrics = evaluation(model, test, loss_fn, logger, device)
 
     if plot:
+        rel_path = cfg.fig_path + out_path.split('/', 2)[-1]
+        os.makedirs(rel_path, exist_ok=True)
+
         plot_metrics_vs_epochs(train_metrics[:, 0], val_metrics[:, 0], 
-                               prms.epochs, cfg.fig_path, cfg.dpi, "Huber")
+                               prms.epochs, rel_path, cfg.dpi, "Huber")
         plot_metrics_vs_epochs(train_metrics[:, 1], val_metrics[:, 1], 
-                               prms.epochs, cfg.fig_path, cfg.dpi, "R2")
+                               prms.epochs, rel_path, cfg.dpi, "R2")
     return test_metrics
 
 def initialize_model(input_dim, prms, device):
