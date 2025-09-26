@@ -25,6 +25,6 @@ def search_hyperparameters(product, cfg, fpath, json_manager, device, plot=False
         )
         prms = json_manager.load(fpath + rel_path + fname)
 
-        test_metrics[i] = model_pipeline(prms, cfg, fpath + rel_path, device, plot=True)
+        test_metrics[i] = model_pipeline(prms, cfg, fpath + rel_path, device, plot=plot)
 
     return test_metrics
