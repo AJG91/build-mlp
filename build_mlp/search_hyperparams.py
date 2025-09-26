@@ -7,7 +7,7 @@ def search_hyperparameters(product, cfg, fpath, json_manager, device, plot=False
     test_metrics = tc.zeros((len(product), 2))
 
     for i, (vary_prms_i) in enumerate(product):
-        print(f"params: {vary_prms_i}")
+        print(f"params #{i+1}: {vary_prms_i}")
         lr_i, dim_i, dropout_i = vary_prms_i
         rel_path = (
             f"tests/test{i+1}/"
