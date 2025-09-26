@@ -63,12 +63,14 @@ class OutputLogger:
     filename : str
         Name of file.
     """
-    def __init__(self, filename):
+    def __init__(self, filename: str, show: bool = False):
         self.file = open(filename, "a")
+        self.show = show
 
     def log(self, message: str) -> None:
         """Prints message and writes message to log file."""
-        print(message)
+        if self.show:
+            print(message)
         self.file.write(message + "\n")
         self.file.flush()
 
