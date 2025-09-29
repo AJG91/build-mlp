@@ -322,7 +322,3 @@ def plot_metrics_vs_epochs(
     
     fig.set_constrained_layout_pads(w_pad=0.01, h_pad=0.01)
     fig.savefig(path + f"{metric}_vs_epochs.png", bbox_inches="tight", dpi=dpi)
-
-    
-
-
