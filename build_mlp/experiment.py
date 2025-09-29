@@ -8,10 +8,12 @@ from evaluate import evaluate_model
 from build_dataset import get_dataloaders
 from create_checkpoints import CheckpointManager
 from utils import OutputLogger
+from debug_model import log_gradient_norms
 from plots import plot_metrics_vs_epochs
 
 def model_pipeline(prms, cfg, out_path, device, show=False, plot=False):
-    logger = OutputLogger(out_path + "/output.log", show=show)
+    metrics_logger = OutputLogger(out_path + "/metrics_output.log", show=show)
+    grad_logger = OutputLogger(out_path + "/grad_norm_output.log", show=show)
 
     train, val, test = get_dataloaders(cfg.dataset, cfg.normalize, 
                                        cfg.data_split, cfg.batch_size, 
@@ -19,10 +21,12 @@ def model_pipeline(prms, cfg, out_path, device, show=False, plot=False):
 
     X, _ = next(iter(train))
     model, optimizer, loss_fn = initialize_model(X.shape[1], prms, device)
+
     train_metrics, val_metrics = training(model, train, val, optimizer, 
-                                          loss_fn, prms.epochs, logger, 
+                                          loss_fn, prms.epochs, 
+                                          metrics_logger, grad_logger, 
                                           out_path + "/checkpoints", device)
-    test_metrics = evaluation(model, test, loss_fn, logger, device)
+    test_metrics = evaluation(model, test, loss_fn, metrics_logger, device)
 
     if plot:
         rel_path = cfg.fig_path + out_path.split('/', 2)[-1]
@@ -40,22 +44,23 @@ def initialize_model(input_dim, prms, device):
     loss_fn = nn.SmoothL1Loss(beta=1.0) 
     return model, optimizer, loss_fn
 
-def training(model, train, val, optimizer, loss_fn, epochs, logger, path, device):
+def training(model, train, val, optimizer, loss_fn, epochs, metrics_logger, debug_logger, path, device):
     manager = CheckpointManager(path)
     train_metrics = tc.zeros((epochs, 2))
     val_metrics = tc.zeros((epochs, 2))
     
     for e in range(epochs):
-        logger.log(f"Epoch {e + 1}:")
+        metrics_logger.log(f"Epoch {e + 1}:")
 
         train_metrics[e] = train_model(model, train, optimizer, loss_fn, device)
         val_metrics[e] = evaluate_model(model, val, loss_fn, device)
-        manager.save(model, optimizer, e, train_metrics[e][0], val_metrics[e][0], logger)
+        manager.save(model, optimizer, e, train_metrics[e][0], val_metrics[e][0], metrics_logger)
+        log_gradient_norms(model, e, debug_logger)
 
-        logger.log(f"Train - Huber: {train_metrics[e][0]:.4f}, "
-                   f"R2-score: {train_metrics[e][1]:.4f}")
-        logger.log(f"Validation - Huber: {val_metrics[e][0]:.4f}, "
-                   f"R2-score: {val_metrics[e][1]:.4f}\n")
+        metrics_logger.log(f"Train - Huber: {train_metrics[e][0]:.4f}, "
+                           f"R2-score: {train_metrics[e][1]:.4f}")
+        metrics_logger.log(f"Validation - Huber: {val_metrics[e][0]:.4f}, "
+                           f"R2-score: {val_metrics[e][1]:.4f}\n")
     return train_metrics, val_metrics
 
 def evaluation(model, test, loss_fn, logger, device):
