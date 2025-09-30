@@ -8,7 +8,7 @@ from evaluate import evaluate_model
 from build_dataset import get_dataloaders
 from create_checkpoints import CheckpointManager
 from utils import OutputLogger
-from debug_model import log_gradient_norms
+from gradient_norm import log_gradient_norms
 from plots import plot_metrics_vs_epochs
 
 def model_pipeline(prms, cfg, out_path, device, show=False, plot=False):
