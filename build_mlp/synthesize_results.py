@@ -2,13 +2,14 @@ import os
 import re
 import glob
 import torch as tc
+from typing import Union
 from create_checkpoints import CheckpointManager
 
-def load_results(fname_pattern, start_dir, headers, *args):
+def load_results(fname, start_dir, headers, *args):
     """
     """
     models, results, idcs = [], [], []
-    files = find_file_glob(fname_pattern, start_dir)
+    files = find_file_glob(fname, start_dir)
     
     for file in files:
         manager = CheckpointManager(file)
@@ -34,27 +35,35 @@ def load_results(fname_pattern, start_dir, headers, *args):
 
     create_table([list(row) for row in zip(*data)], headers)
 
-def find_file_glob(filename_pattern, start_dir):
+def find_file_glob(pattern: str, start_dir: str):
     """
     """
-    search = os.path.join(start_dir, "**", filename_pattern)
+    search = os.path.join(start_dir, "**", pattern)
     found = glob.glob(search, recursive=True)
     return found
 
-def create_table(data, headers):
-    """
-    """
+def create_table(data: list, headers: list[str], decimals: int = 6) -> None:
+    def round_to_decimal(x: Union[int, float]) -> str:
+        if isinstance(x, (int, float)):
+            return f"{x:.{decimals}f}"
+        return str(x)
+
+    data = [[round_to_decimal(item) for item in row] for row in data]
+
     cols = list(zip(*data))
     col_widths = [max(len(str(item)) for item in col) for col in cols]
     col_widths = [max(len(h), w) for h, w in zip(headers, col_widths)]
 
-    header_row = "| " + " | ".join(f"{h:<{w}}" 
+    header_row = "| " + " | ".join(f"{h:{"^"}{w}}" 
                                    for h, w in zip(headers, col_widths)) + " |"
 
     separator_row = "| " + " | ".join("-" * w for w in col_widths) + " |"
 
-    data_rows = ["| " + " | ".join(f"{str(item):<{w}}" 
-                                   for item, w in zip(row, col_widths)) + " |" for row in data]
+    data_rows = [
+        "| " + " | ".join(f"{str(item):{"^"}{w}}" 
+                          for item, w in zip(row, col_widths)) + " |" 
+                          for row in data
+    ]
 
     print(header_row)
     print(separator_row)
