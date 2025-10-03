@@ -8,6 +8,7 @@ dependencies:
   - python=3.12
   - numpy=2.3
   - pandas=2.3
+  - tabulate=0.9
   - pytorch=2.6.0
   - scikit-learn=1.7
   - matplotlib=3.10
