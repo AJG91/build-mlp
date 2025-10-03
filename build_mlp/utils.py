@@ -142,7 +142,7 @@ class JsonManager(dict):
         Returns
         -------
         dict
-            A dictionary containing the configuration parameters parsed
+            A dictionary containing the configuration parameters parsed 
             from the json file.
 
         Raises

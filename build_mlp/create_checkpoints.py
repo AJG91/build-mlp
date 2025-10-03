@@ -1,7 +1,7 @@
 import os
 import torch as tc
 from torch import nn, optim
-from typing import Optional, Union, Tuple
+from typing import Optional, Union, Tuple, Any, Dict
 from utils import OutputLogger
 
 class CheckpointManager:
@@ -57,13 +57,20 @@ class CheckpointManager:
     
         Parameters
         ----------
-        model : 
-        optimizer : 
-        epoch : 
-        train_loss : 
-        val_loss : 
+        model : nn.Module
+            Model whose checkpoints will be saved.
+        optimizer : optim.Optimizer
+            Optimizer used by the model.
+        epoch : int
+            The epoch number currently at.
+        train_loss : Union[float, tc.Tensor]
+            Training loss.
+        val_loss : Union[float, tc.Tensor]
+            Validation loss.
         logger : OutputLogger
+            Logger that will be used to log information.
         fname : str, optional (default="last_weights")
+            Beginning of name of file used by checkpoints.
         """
         if isinstance(val_loss, tc.Tensor):
             val_loss = float(val_loss.detach().cpu().item())
@@ -96,7 +103,7 @@ class CheckpointManager:
         Parameters
         ----------
         fname : str
-            Beginning of name of file.
+            Beginning of name of file used by checkpoints.
 
         Returns
         -------
@@ -113,17 +120,23 @@ class CheckpointManager:
         self,
         fname: str = "last_weights",
         use_best: bool = False,
-    ):
+    ) -> Dict[str, Any]:
         """
+        Loads a checkpoint into memory.
+        Can load either latest model or best model.
     
         Parameters
         ----------
         fname : str, optional (default="last_weights")
+            Beginning of name of file used by checkpoints.
         use_best : boolean, optional (default=False)
+            If True, loads the best checkpoint.
+            If False, loads latest checkpoint.
 
         Returns
         -------
-        checkpoint : 
+        checkpoint : Dict[str, Any]
+            Training checkpoint.
         """
         if use_best:
             ckpt_path = self.best_path
@@ -152,11 +165,13 @@ class CheckpointManager:
     
         Parameters
         ----------
-        model : 
-        optimizer : 
+        model : nn.Module
+        optimizer : optim.Optimizer, optional (default=None)
         fname : str, optional (default="last_weights")
-        use_best : 
-        load_optimizer : 
+        use_best : boolean, optional (default=False)
+            If True, loads the best checkpoint.
+            If False, loads latest checkpoint.
+        load_optimizer : boolean, optional (default=True)
 
         Returns
         -------
@@ -180,12 +195,12 @@ class CheckpointManager:
         self,
         model: nn.Module,
         optimizer: optim.Optimizer,
-        fname: str = "epoch",
+        fname: str = "last_weights",
         use_best: bool = False,
     ) -> Tuple[nn.Module, optim.Optimizer, int]:
         """
         Loads a checkpoint and return (model, optimizer, start_epoch) in one call.
-        Wrapper for load_checkpoint method.
+        Wrapper for load_model method.
 
         Parameters
         ----------
@@ -193,7 +208,7 @@ class CheckpointManager:
             Model to load.
         optimizer : optim.Optimizer
             Optimizer to load state into.
-        fname : str, optional (default="epoch")
+        fname : str, optional (default="last_weights")
             Beginning of name of file.
         use_best : bool, optional (default=False)
             If True, loads the best checkpoint.
@@ -204,5 +219,5 @@ class CheckpointManager:
         Tuple[nn.Module, optim.Optimizer, int]
             Model, optimizer, and next epoch to start training from.
         """
-        start_epoch = self.load_checkpoint(model, optimizer, fname=fname, use_best=use_best, load_optimizer=True)
+        start_epoch = self.load_model(model, optimizer, fname=fname, use_best=use_best, load_optimizer=True)
         return model, optimizer, start_epoch

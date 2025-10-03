@@ -136,7 +136,7 @@ class PreprocessDataset(Dataset):
         X_val: tc.Tensor, 
         X_test: tc.Tensor
     ) -> Tuple[tc.Tensor, tc.Tensor, tc.Tensor]:
-        """ """
+        """Scales the dataset by subtracting the mean and scaling to unit variance."""
         self.scaler = StandardScaler()
         return (
             tc.as_tensor(self.scaler.fit_transform(X_train), dtype=tc.float32),
@@ -150,7 +150,7 @@ class PreprocessDataset(Dataset):
         X_val: tc.Tensor, 
         X_test: tc.Tensor
     ) -> Tuple[tc.Tensor, tc.Tensor, tc.Tensor]:
-        """ """
+        """Scales the dataset in such a way so that the values lie between a given range (default=[0,1])."""
         self.scaler = MinMaxScaler()
         return (
             tc.as_tensor(self.scaler.fit_transform(X_train), dtype=tc.float32),

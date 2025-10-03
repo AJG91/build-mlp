@@ -182,6 +182,7 @@ def plot_price_by_location(
     figsize: Tuple = (10, 8)
 ) -> None:
     """
+    Plots latitude-longitude heat map of California based on housing prices.
 
     Parameters
     ----------
@@ -222,6 +223,8 @@ def plot_population_and_prices(
     figsize: Tuple = (10, 8)
 ) -> None:
     """
+    Plots latitude-longitude heat map of California based on population and housing prices. 
+    The size of the circle is proportional to the total population in the area.
 
     Parameters
     ----------
@@ -263,6 +266,7 @@ def plot_correlation_map(
     figsize: Tuple = (10, 8)
 ) -> None:
     """
+    Plots the correlation between fetures.
 
     Parameters
     ----------
@@ -308,6 +312,25 @@ def plot_metrics_vs_epochs(
     figsize: Tuple = (10, 8)
 ) -> None:
     """
+    Plots the training and validation metrics over total epochs.
+
+    Parameters
+    ----------
+    train_metric : tc.Tensor
+        Metrics generated during the training phase.
+        Example: loss, MSE, R2-score
+    val_metric : tc.Tensor
+        Metrics generated during the validation phase.
+        Example: loss, MSE, R2-score
+    epochs : int
+        Number of epochs used to train model.
+    path : str
+        String to the directory where the plot is saved.
+    dpi : int
+        Dots per inch.
+        A higher dpi results in a sharper image.
+    figsize : Tuple, optional (default=(10, 8))
+        Specifies the figure size.
     """
     epochs_mesh = tc.arange(0, epochs)
     

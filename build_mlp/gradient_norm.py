@@ -8,6 +8,17 @@ def log_gradient_norms(
     logger: Any
 ) -> None:
     """
+    Calculates and logs the gradient norms at iteration=`step` 
+    and logs information in `logger`.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The model that will be trained.
+    step : int
+        The current iteration count.
+    logger : Any
+        Logger instance that is used to save debugging information.
     """
     total_norm = 0.0
     for name, param in model.named_parameters():

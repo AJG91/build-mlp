@@ -5,8 +5,26 @@ import torch as tc
 from typing import Union
 from create_checkpoints import CheckpointManager
 
-def load_results(fname, start_dir, headers, *args):
+def load_results(
+    fname: str, 
+    start_dir: str, 
+    headers: list[str], 
+    *args: tc.Tensor
+) -> None:
     """
+    Loads the models and results from the hyperparameter exploration.
+
+    Parameters
+    ----------
+    fname : str
+        Name of directory that contains the models.
+    start_dir : str
+        Initial directory where the different experiments are contained.
+    headers : list[str]
+        Headers that will be used for displaying a table with results
+        for the different hyperparameter experiments.
+    *args : tc.Tensor
+        Additional metrics that will be displayed.
     """
     models, results, idcs = [], [], []
     files = find_file_glob(fname, start_dir)
@@ -35,15 +53,56 @@ def load_results(fname, start_dir, headers, *args):
 
     create_table([list(row) for row in zip(*data)], headers)
 
-def find_file_glob(pattern: str, start_dir: str):
+def find_file_glob(
+    fname: str, 
+    start_dir: str
+) -> list[str]:
     """
+    Stores the different paths leading to the checkpoints
+    for all the hyperparameter exploration experiments.
+    
+    Parameters
+    ----------
+    fname : str
+        Name of directory that contains the models.
+    start_dir : str
+        Initial directory where the different experiments are contained.
+
+    Returns
+    -------
+    found : list[str]
+        List of the different paths leading to the checkpoints
+        for all the hyperparameter experiments.
     """
-    search = os.path.join(start_dir, "**", pattern)
+    search = os.path.join(start_dir, "**", fname)
     found = glob.glob(search, recursive=True)
     return found
 
-def create_table(data: list, headers: list[str], decimals: int = 6) -> None:
+def create_table(
+    data: list, 
+    headers: list[str], 
+    decimals: int = 6
+) -> None:
+    """
+    Creates a table with the metrics for all hyperparameter
+    experiments. 
+    Table compatible with markdown.
+    
+    Parameters
+    ----------
+    data : list
+        List containing the name of each experiment.
+        Name is the file name where the experiment info is contained.
+    headers : list[str]
+        Headers that will be used for the table.
+    decimals : int, optional (default=6)
+        Specifies the number of decimals to display.
+    """
     def round_to_decimal(x: Union[int, float]) -> str:
+        """
+        Rounds a number to a fixed number of decimal places 
+        and returns it as a string.
+        """
         if isinstance(x, (int, float)):
             return f"{x:.{decimals}f}"
         return str(x)
