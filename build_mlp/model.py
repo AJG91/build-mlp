@@ -27,7 +27,7 @@ class MLP(nn.Module):
         Decimal between 0 and 1.
     """
     def __init__(self, input_dim, hidden_dim, dropout):
-        super(MLP, self).__init__()
+        super().__init__()
         self.net = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
